@@ -1,0 +1,25 @@
+FROM php:8.2.7-fpm
+
+RUN apt-get update && apt-get install -y \
+    zlib1g-dev \
+    libmemcached-dev \
+    libssl-dev \
+    libmagickwand-dev \
+    libicu-dev \
+    libmcrypt-dev \
+    libzip-dev \
+    libpng-dev \
+    libedit-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libbz2-dev \
+    libonig-dev \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pecl install imagick msgpack igbinary memcached \
+    && docker-php-ext-enable imagick msgpack igbinary memcached \
+    && docker-php-ext-install pdo_mysql mysqli bcmath intl mbstring opcache soap xsl zip gd bz2 curl
+
+CMD ["php-fpm"]
+

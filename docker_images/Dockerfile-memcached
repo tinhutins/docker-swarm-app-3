@@ -1,0 +1,9 @@
+FROM alpine:latest
+
+RUN apk update && \
+    apk --no-cache --update add memcached  && rm -rf /var/cache/apk/*
+
+EXPOSE 11211
+
+CMD ["/usr/bin/memcached","-p","11211","-u","memcached","-m","10","-t","4","-c","100","-I","4M","k"]
+
