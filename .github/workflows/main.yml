@@ -39,12 +39,13 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      
       -
         name: Build and push apache2
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: /docker_images/Dockerfile-apache2
+          file: docker_images/Dockerfile-apache2
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache2:${{ github.sha }}
@@ -54,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: /docker_images/Dockerfile-memcached
+          file: docker_images/Dockerfile-memcached
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/memcached:${{ github.sha }}
@@ -64,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: /docker_images/Dockerfile-phpfpm8.2
+          file: docker_images/Dockerfile-phpfpm8.2
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/phpfpm:${{ github.sha }}
