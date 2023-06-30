@@ -111,12 +111,12 @@ jobs:
           username: root
           key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           port: 22
-          script: |
+          script: |     
+            rm -rf ~/docker-swarm-app-3/
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
             cd docker-swarm-app-3/
             export DOCKER_IMAGE_TAG=${{ github.sha }}
-            docker-compose config | docker stack deploy -c docker_images/docker-compose.yml my-swarm-app-3-marker
-            rm -rf ../docker-swarm-app-3/
+            docker-compose config | docker stack deploy -c docker-compose.yml my-swarm-app-3-marker
   
       #-  
       # name: Deploy to Docker swarm
