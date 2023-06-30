@@ -15,6 +15,9 @@ RUN apk update && apk add --no-cache \
     bzip2-dev \
     oniguruma-dev \
     curl-dev \
+    autoconf \
+    make \
+    g++ \
     && rm -rf /var/cache/apk/*
 
 RUN pecl install imagick msgpack igbinary memcached \
