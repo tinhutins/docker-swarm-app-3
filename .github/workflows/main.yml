@@ -104,7 +104,7 @@ jobs:
          # script: set -a && . .env && set +a
               
       -
-        name: deploy to docker swarm second app 
+        name: deploy to docker swarm third app - marker 
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: 192.168.43.128
@@ -115,7 +115,7 @@ jobs:
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
             cd docker-swarm-app-3/
             export DOCKER_IMAGE_TAG=${{ github.sha }}
-            docker-compose config | docker stack deploy -c docker_images/docker-compose.yaml my-swarm-app-3-marker
+            docker-compose config | docker stack deploy -c docker_images/docker-compose.yml my-swarm-app-3-marker
             rm -rf ../docker-swarm-app-3/
   
       #-  
