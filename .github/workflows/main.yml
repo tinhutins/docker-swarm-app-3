@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - "master"
+
+env:
+  APACHE_IMAGE_NAME: "hutinskit/apache2"
+  APACHE_IMAGE_TAG: "v1.0.30"
+  MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
+  MEMCACHED_IMAGE_TAG: "v1.0.30"
+  PHP_IMAGE_NAME: "hutinskit/phpfpm"
+  PHP_IMAGE_TAG: "v1.0.30"
+
 jobs:
   build:
     runs-on: self-hosted
@@ -48,7 +57,7 @@ jobs:
           file: docker_images/Dockerfile-apache2
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache2:${{ github.sha }}
+          tags: ${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
       
       -
         name: Build and push memcached
@@ -58,7 +67,7 @@ jobs:
           file: docker_images/Dockerfile-memcached
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/memcached:${{ github.sha }}
+          tags: ${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
           
       -
         name: Build and push php-fpm
@@ -68,7 +77,7 @@ jobs:
           file: docker_images/Dockerfile-phpfpm8.2
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/phpfpm:${{ github.sha }}
+          tags: ${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
       
      # - 
      #   name: create env file
@@ -115,7 +124,9 @@ jobs:
             rm -rf ~/docker-swarm-app-3/
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
             cd docker-swarm-app-3/
-            export DOCKER_IMAGE_TAG=${{ github.sha }}
+            export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
+            export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
+            export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
             docker-compose config | docker stack deploy -c docker-compose.yml my-swarm-app-3-marker
   
       #-  

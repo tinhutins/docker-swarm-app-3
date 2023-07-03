@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   apache:
-    image: "hutinskit/apache2:${DOCKER_IMAGE_TAG}"
+    image: "${APACHE_DOCKER_IMAGE_TAG}"
     container_name: apache
     ports:
       - '80:80'
@@ -18,7 +18,7 @@ services:
         constraints: [node.hostname == test-jenkins-cicd]
   phpfpm:
     container_name: phpfpm
-    image: "hutinskit/phpfpm:${DOCKER_IMAGE_TAG}"
+    image: "${PHP_DOCKER_IMAGE_TAG}"
     ports: 
       - '9000:9000'
         # - '9002:9002'
@@ -31,6 +31,6 @@ services:
         constraints: [node.hostname == test-jenkins-cicd]
   memcached:
     container_name: memcached
-    image: "hutinskit/memcached:${DOCKER_IMAGE_TAG}"
+    image: "${MEMCACHED_DOCKER_IMAGE_TAG}"
     ports:
         - "11211:11211"
