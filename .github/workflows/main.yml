@@ -9,7 +9,7 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.31"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.47"
+  MEMCACHED_IMAGE_TAG: "v1.0.48"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -213,7 +213,7 @@ jobs:
             export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
             export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
             docker-compose config | docker stack deploy -c docker-compose.yml my-swarm-app-3-marker
-            rm -rf ~/docker-swarm-app-3/
+            cd ../ && rm -rf ~/docker-swarm-app-3/
   
       #-  
       # name: Deploy to Docker swarm
