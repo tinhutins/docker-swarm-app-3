@@ -14,7 +14,7 @@ env:
   PHP_IMAGE_TAG: "v1.0.30"
 
 jobs:
-  check_image:
+  check-image:
     runs-on: self-hosted
     steps:
       -
@@ -75,7 +75,7 @@ jobs:
     needs: check-image
     runs-on: self-hosted
     steps:
-      - run: echo ${{needs.check_image.steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED}}
+      - run: echo ${{needs.check-image.steps.outputs.BUILD-IMAGE-MEMCACHED}}
   debug:
     needs: [check-image, display-image-memacached]
     runs-on: ubuntu-latest
