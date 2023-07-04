@@ -7,9 +7,9 @@ on:
 
 env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
-  APACHE_IMAGE_TAG: "v1.0.30"
+  APACHE_IMAGE_TAG: "v1.0.31"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.44"
+  MEMCACHED_IMAGE_TAG: "v1.0.45"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -101,8 +101,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
-    outputs:
-      result: ${{ job.status }}
+#     outputs:
+#       result: ${{ job.status }}
 
   build-image-memcached:
     needs: check-image
@@ -127,8 +127,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
-    outputs:
-      result: ${{ job.status }}
+#     outputs:
+#       result: ${{ job.status }}
   
   build-image-php:
     needs: check-image
@@ -153,8 +153,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-    outputs:
-      result: ${{ job.status }}
+#     outputs:
+#       result: ${{ job.status }}
       
      # - 
      #   name: create env file
