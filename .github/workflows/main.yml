@@ -9,7 +9,7 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.31"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.46"
+  MEMCACHED_IMAGE_TAG: "v1.0.47"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -206,13 +206,14 @@ jobs:
           key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           port: 22
           script: |     
-            rm -rf ~/docker-swarm-app-3/
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
+            rsync -av docker-swarm-app-3/ marker_persistent_data/
             cd docker-swarm-app-3/
             export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
             export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
             export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
             docker-compose config | docker stack deploy -c docker-compose.yml my-swarm-app-3-marker
+            rm -rf ~/docker-swarm-app-3/
   
       #-  
       # name: Deploy to Docker swarm

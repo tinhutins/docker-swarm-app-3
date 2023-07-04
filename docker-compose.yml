@@ -8,11 +8,11 @@ services:
       - '9090:9090'
       - '9091:9091'
     volumes:
-      - ~/docker-swarm-app-3/apache2/etc/apache2.conf:/etc/apache2/apache2.conf
-      - ~/docker-swarm-app-3/apache2/etc/ports.conf:/etc/apache2/ports.conf
-      - ~/docker-swarm-app-3/apache2/etc/mods-enabled/mpm_event.conf:/etc/apache2/mods-enabled/mpm_event.conf
-      - ~/docker-swarm-app-3/apache2/etc/sites-enabled/intercom_markerdev_info.conf:/etc/apache2/sites-enabled/intercom_markerdev_info.conf
-      - ~/docker-swarm-app-3/test_site_intercom:/var/www/vhosts/intercom_markerdev_info
+      - ~/marker_persistent_data/apache2/etc/apache2.conf:/etc/apache2/apache2.conf
+      - ~/marker_persistent_data/apache2/etc/ports.conf:/etc/apache2/ports.conf
+      - ~/marker_persistent_data/apache2/etc/mods-enabled/mpm_event.conf:/etc/apache2/mods-enabled/mpm_event.conf
+      - ~/marker_persistent_data/apache2/etc/sites-enabled/intercom_markerdev_info.conf:/etc/apache2/sites-enabled/intercom_markerdev_info.conf
+      - ~/marker_persistent_data/test_site_intercom:/var/www/vhosts/intercom_markerdev_info
     deploy:
       placement:
         constraints: [node.hostname == test-jenkins-cicd]
@@ -24,7 +24,7 @@ services:
         # - '9002:9002'
     volumes:
       #- ../php_fpm_82/intercom.conf:/usr/local/etc/php-fpm.d/intercom.conf
-      - ~/docker-swarm-app-3/test_site_intercom:/var/www/vhosts/intercom_markerdev_info
+      - ~/marker_persistent_data/test_site_intercom:/var/www/vhosts/intercom_markerdev_info
       #- /root/marker_app_stack/php_fpm_82/zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
     deploy:
       placement:
