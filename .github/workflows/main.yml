@@ -9,7 +9,7 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.30"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.34"
+  MEMCACHED_IMAGE_TAG: "v1.0.37"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -17,7 +17,9 @@ jobs:
   check-image:
     runs-on: self-hosted
     outputs:
+      apache2_output: ${{ steps.apache2-step.outputs.apache2_output }}
       memcached_output: ${{ steps.memcached-step.outputs.memcached_output }}
+      php_output: ${{ steps.memcached-step.outputs.php_output }}
     steps:
       -
         name: Checkout
@@ -40,7 +42,7 @@ jobs:
           if docker pull $APACHE_IMAGE_NAME:$APACHE_IMAGE_TAG; then
             echo "Apache2 image already exists, skipping new build and push"
           else
-            echo "BUILD-IMAGE-APACHE2=true" >> $GITHUB_OUTPUT
+            echo "apache2_output=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
       
@@ -67,7 +69,7 @@ jobs:
           if docker pull $PHP_IMAGE_NAME:$PHP_IMAGE_TAG; then
             echo "Phpfpm image already exists, skipping new build and push"
           else
-            echo "BUILD-IMAGE-PHP=true" >> $GITHUB_OUTPUT
+             echo "php_output=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
   
@@ -79,7 +81,7 @@ jobs:
 
   build-image-apache2:
     needs: check-image
-    if: ${{ needs.check-image.outputs.BUILD-IMAGE-APACHE2 == 'true' }}
+    if: ${{ needs.check-image.outputs.apache2_output == 'true' }}
     runs-on: self-hosted
     steps:
       # -
@@ -134,7 +136,7 @@ jobs:
   
   build-image-php:
     needs: check-image
-    if: ${{ needs.check-image.outputs.php-step.BUILD-IMAGE-PHP == 'true' }}
+    if: ${{ needs.check-image.outputs.php_output == 'true' }}
     runs-on: self-hosted
     steps: 
       -
@@ -188,7 +190,7 @@ jobs:
       - build-image-apache2
       - build-image-memcached
       - build-image-php
-    if: ${{ needs.build-image-apache2.outputs.result }} == 'success' || ${{ needs.build-image-memcached.outputs.result }} == 'success' || ${{ needs.build-image-php.outputs.result == 'success' }}
+    if: ${{ needs.build-image-apache2.outputs.result == 'success' || needs.build-image-memcached.outputs.result == 'success' || needs.build-image-php.outputs.result == 'success' }}
     runs-on: self-hosted
     steps:
      # -
