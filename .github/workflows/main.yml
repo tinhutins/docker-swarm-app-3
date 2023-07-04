@@ -51,8 +51,7 @@ jobs:
             echo "Memcached image already exists, skipping new build and push"
           else
             echo "testing"
-            echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_OUTPUT
-            echo "$GITHUB_OUTPUT"
+            echo "::set-output name=BUILD-IMAGE-MEMCACHED::true"
             # Perform additional steps if the image does not exist
           fi
       
@@ -78,13 +77,6 @@ jobs:
       - env:
           OUTPUT1: ${{ needs.check-image.outputs.memcached-step.BUILD-IMAGE-MEMCACHED }}"
         run: echo "$OUTPUT1"
-  debug:
-    needs: [check-image, display-image-memacached]
-    runs-on: ubuntu-latest
-    if: ${{ failure() }}
-    steps:
-      - uses: actions/checkout@v3
-      - run: ./debug
 
   build-image-apache2:
     needs: check-image
