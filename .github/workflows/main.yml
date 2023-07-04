@@ -35,7 +35,7 @@ jobs:
         run: |
 
           # Check if the image exists
-          if docker pull $APACHE_IMAGE_NAME:APACHE_IMAGE_TAG; then
+          if docker pull $APACHE_IMAGE_NAME:$APACHE_IMAGE_TAG; then
             echo "Apache2 image already exists, skipping new build and push"
           else
             echo "BUILD-IMAGE-APACHE2=true" >> $GITHUB_OUTPUT
@@ -59,7 +59,7 @@ jobs:
         run: |
 
           # Check if the image exists
-          if docker pull $PHP_IMAGE_NAME:$OHO_IMAGE_TAG; then
+          if docker pull $PHP_IMAGE_NAME:$PHP_IMAGE_TAG; then
             echo "Phpfpm image already exists, skipping new build and push"
           else
             echo "BUILD-IMAGE-PHP=true" >> $GITHUB_OUTPUT
@@ -68,7 +68,7 @@ jobs:
     
   build-image-apache2:
     needs: check-image
-    if: ${{ needs.check-image.apache2-step.outputs.BUILD-IMAGE-APACHE2 == 'true' }}
+    if: ${{ needs.check-image.outputs.apache2-step.BUILD-IMAGE-APACHE2 == 'true' }}
     runs-on: self-hosted
     steps:
       # -
@@ -95,7 +95,7 @@ jobs:
 
   build-image-memcached:
     needs: check-image
-    if: ${{ needs.check-image.memcached-step.outputs.BUILD-IMAGE-MEMCACHED == 'true' }}
+    if: ${{ needs.check-image.outputs.memcached-step.BUILD-IMAGE-MEMCACHED == 'true' }}
     runs-on: self-hosted
     steps:
       -
@@ -119,7 +119,7 @@ jobs:
   
   build-image-php:
     needs: check-image
-    if: ${{ needs.check-image.php-step.outputs.BUILD-IMAGE-PHP == 'true' }}
+    if: ${{ needs.check-image.outputs.php-step.BUILD-IMAGE-PHP == 'true' }}
     runs-on: self-hosted
     steps: 
       -
