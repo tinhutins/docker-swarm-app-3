@@ -71,6 +71,7 @@ jobs:
           fi
   
   display-image-memacached:
+    needs: check-image
     runs-on: self-hosted
     steps:
       - run: echo ${{needs.check-image.outputs.BUILD-IMAGE-MEMCACHED}}
