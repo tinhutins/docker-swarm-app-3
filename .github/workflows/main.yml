@@ -9,7 +9,7 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.30"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.43"
+  MEMCACHED_IMAGE_TAG: "v1.0.44"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -182,10 +182,9 @@ jobs:
       - build-image-php
     if: |
       always() &&
-      (needs.build-image-apache2.outputs.result == 'success' || needs.build-image-apache2.outputs.result == 'skipped') &&
-      (needs.build-image-memcached.outputs.result == 'success' || needs.build-image-memcached.outputs.result == 'skipped') &&
-      (needs.build-image-php.outputs.result == 'success' || needs.build-image-php.outputs.result == 'skipped') &&
-      ${{ needs.build-image-apache2.outputs.result == 'success' || needs.build-image-memcached.outputs.result == 'success' || needs.build-image-php.outputs.result == 'success' }}
+      needs.build-image-apache2.result == 'success' ||
+      needs.build-image-memcached.result == 'success' ||
+      needs.build-image-php.result == 'success'
     runs-on: self-hosted
     steps:
      # -
