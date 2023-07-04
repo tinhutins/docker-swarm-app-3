@@ -54,6 +54,9 @@ jobs:
             echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
+      
+      - name: Display
+        run: echo "${{ steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED }}"
 
       - name: Check Docker Image for phpfpm and push it if doesn't exists
         id: php-step
