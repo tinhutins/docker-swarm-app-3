@@ -106,7 +106,7 @@ jobs:
 
   build-image-memcached:
     needs: check-image
-    if: ${{ needs.check-image.outputs.memcached-step.BUILD-IMAGE-MEMCACHED == 'true' }}
+    if: ${{ needs.check-image.outputs.memcached_output == 'true' }}
     runs-on: self-hosted
     steps:
       -
