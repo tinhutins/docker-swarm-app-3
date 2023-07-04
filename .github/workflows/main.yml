@@ -38,7 +38,7 @@ jobs:
           if docker pull $APACHE_IMAGE_NAME:APACHE_IMAGE_TAG; then
             echo "Apache2 image already exists, skipping new build and push"
           else
-            echo "::set-output name=build-image-apache2::true"
+            echo "BUILD-IMAGE-APACHE2=true" >> $GITHUB_ENV
             # Perform additional steps if the image does not exist
           fi
       
@@ -49,7 +49,7 @@ jobs:
           if docker pull $MEMCACHED_IMAGE_NAME:$MEMCACHED_IMAGE_TAG; then
             echo "Memcached image already exists, skipping new build and push"
           else
-            echo "::set-output name=build-image-memcached::true"
+            echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_ENV
             # Perform additional steps if the image does not exist
           fi
 
@@ -60,13 +60,13 @@ jobs:
           if docker pull $PHP_IMAGE_NAME:$OHO_IMAGE_TAG; then
             echo "Phpfpm image already exists, skipping new build and push"
           else
-            echo "::set-output name=build-image-php::true"
+            echo "BUILD-IMAGE-PHP=true" >> $GITHUB_ENV
             # Perform additional steps if the image does not exist
           fi
     
   build-image-apache2:
     needs: check-image
-    if: ${{ needs.check-image.outputs.build-image-apache2 == 'true' }}
+    if: ${{ env.BUILD-IMAGE-APACHE2 == 'true' }}
     runs-on: self-hosted
     steps:
       # -
@@ -93,7 +93,7 @@ jobs:
 
   build-image-memcached:
     needs: check-image
-    if: ${{ needs.check-image.outputs.build-image-memcached == 'true' }}
+    if: ${{ env.BUILD-IMAGE-MEMCACHED == 'true' }}
     runs-on: self-hosted
     steps:
       -
@@ -117,7 +117,7 @@ jobs:
   
   build-image-php:
     needs: check-image
-    if: ${{ needs.check-image.outputs.build-image-php == 'true' }}
+    if: ${{ env.BUILD-IMAGE-PHP == 'true' }}
     runs-on: self-hosted
     steps: 
       -
