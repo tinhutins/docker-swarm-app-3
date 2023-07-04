@@ -9,7 +9,7 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.30"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.38"
+  MEMCACHED_IMAGE_TAG: "v1.0.39"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
@@ -74,11 +74,6 @@ jobs:
       memcached_output: ${{ steps.memcached-step.outputs.memcached_output }}
       php_output: ${{ steps.memcached-step.outputs.php_output }}
   
-  display-image-memacached:
-    needs: check-image
-    runs-on: self-hosted
-    steps:
-      - run: echo ${{ needs.check-image.outputs.memcached_output }}
 
   build-image-apache2:
     needs: check-image
@@ -160,12 +155,6 @@ jobs:
           tags: ${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
     outputs:
       result: ${{ job.status }}
-      
-  display-job-status:
-    needs:  build-image-memcached
-    runs-on: self-hosted
-    steps:
-      - run: echo ${{ needs.build-image-memcached.outputs.result }}
       
      # - 
      #   name: create env file
