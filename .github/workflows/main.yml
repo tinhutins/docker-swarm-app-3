@@ -50,6 +50,7 @@ jobs:
           if docker pull $MEMCACHED_IMAGE_NAME:$MEMCACHED_IMAGE_TAG; then
             echo "Memcached image already exists, skipping new build and push"
           else
+            echo "testing"
             echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
