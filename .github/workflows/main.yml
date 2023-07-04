@@ -31,6 +31,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
       
       - name: Check Docker Image for apache2 and push it if doesn't exists
+        id: apache2-step
         run: |
 
           # Check if the image exists
@@ -42,6 +43,7 @@ jobs:
           fi
       
       - name: Check Docker Image for memcached and push it if doesn't exists
+        id: memcached-step
         run: |
 
           # Check if the image exists
@@ -53,6 +55,7 @@ jobs:
           fi
 
       - name: Check Docker Image for phpfpm and push it if doesn't exists
+        id: php-step
         run: |
 
           # Check if the image exists
@@ -65,7 +68,7 @@ jobs:
     
   build-image-apache2:
     needs: check-image
-    if: ${{ env.BUILD-IMAGE-APACHE2 == 'true' }}
+    if: ${{ needs.check-image.apache2-step.outputs.BUILD-IMAGE-APACHE2 == 'true' }}
     runs-on: self-hosted
     steps:
       # -
@@ -92,7 +95,7 @@ jobs:
 
   build-image-memcached:
     needs: check-image
-    if: ${{ env.BUILD-IMAGE-MEMCACHED == 'true' }}
+    if: ${{ needs.check-image.memcached-step.outputs.BUILD-IMAGE-MEMCACHED == 'true' }}
     runs-on: self-hosted
     steps:
       -
@@ -116,7 +119,7 @@ jobs:
   
   build-image-php:
     needs: check-image
-    if: ${{ env.BUILD-IMAGE-PHP == 'true' }}
+    if: ${{ needs.check-image.php-step.outputs.BUILD-IMAGE-PHP == 'true' }}
     runs-on: self-hosted
     steps: 
       -
