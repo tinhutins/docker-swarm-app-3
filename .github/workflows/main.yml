@@ -76,7 +76,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - env:
-          OUTPUT1: ${{needs.check_image.outputs.BUILD-IMAGE-MEMCACHED}}
+          OUTPUT1: ${{check-image.outputs.BUILD-IMAGE-MEMCACHED}}
         run: echo "$OUTPUT1"
   debug:
     needs: [check-image, display-image-memacached]
