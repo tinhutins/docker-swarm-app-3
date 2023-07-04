@@ -14,10 +14,8 @@ env:
   PHP_IMAGE_TAG: "v1.0.30"
 
 jobs:
-  build:
+  check-image:
     runs-on: self-hosted
-    env:
-      DOCKER_IMAGE_TAG: ${{ github.sha }}
     steps:
       -
         name: Checkout
@@ -49,6 +47,23 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
+      - name: Check Docker Image for apache2 and push it if doesn't exists
+        run: |
+
+          # Check if the image exists
+          if docker pull $APACHE_IMAGE_NAME:$APACHE_IMAGE_NAME; then
+            echo "Image already exists, skipping new build and push"
+          else
+            echo "::set-output name=build_image::true"
+            # Perform additional steps if the image does not exist
+          fi
+    
+  build-image:
+    runs-on: self-hosted
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
       -
         name: Build and push apache2
         uses: docker/build-push-action@v4
@@ -99,7 +114,6 @@ jobs:
          # target: /root
        
   deploy:
-    needs: build
     runs-on: self-hosted
     steps:
      # -
