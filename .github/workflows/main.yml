@@ -20,23 +20,7 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            hutinskit/swarmtest
-          # generate Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
+
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -51,19 +35,52 @@ jobs:
         run: |
 
           # Check if the image exists
-          if docker pull $APACHE_IMAGE_NAME:$APACHE_IMAGE_NAME; then
-            echo "Image already exists, skipping new build and push"
+          if docker pull $APACHE_IMAGE_NAME:APACHE_IMAGE_TAG; then
+            echo "Apache2 image already exists, skipping new build and push"
           else
-            echo "::set-output name=build_image::true"
+            echo "::set-output name=build-image-apache2::true"
+            # Perform additional steps if the image does not exist
+          fi
+      
+      - name: Check Docker Image for memcached and push it if doesn't exists
+        run: |
+
+          # Check if the image exists
+          if docker pull $MEMCACHED_IMAGE_NAME:$MEMCACHED_IMAGE_TAG; then
+            echo "Memcached image already exists, skipping new build and push"
+          else
+            echo "::set-output name=build-image-memcached::true"
+            # Perform additional steps if the image does not exist
+          fi
+
+      - name: Check Docker Image for phpfpm and push it if doesn't exists
+        run: |
+
+          # Check if the image exists
+          if docker pull $PHP_IMAGE_NAME:$OHO_IMAGE_TAG; then
+            echo "Phpfpm image already exists, skipping new build and push"
+          else
+            echo "::set-output name=build-image-php::true"
             # Perform additional steps if the image does not exist
           fi
     
-  build-image:
+  build-image-apache2:
+    needs: check-image
+    if: ${{ needs.check-image.outputs.build-image-apache2 == 'true' }}
     runs-on: self-hosted
     steps:
+      # -
+      #   name: Checkout
+      #   uses: actions/checkout@v3
       -
-        name: Checkout
-        uses: actions/checkout@v3
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       -
         name: Build and push apache2
         uses: docker/build-push-action@v4
@@ -73,7 +90,21 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
-      
+
+  build-image-memcached:
+    needs: check-image
+    if: ${{ needs.check-image.outputs.build-image-memcached == 'true' }}
+    runs-on: self-hosted
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2  
       -
         name: Build and push memcached
         uses: docker/build-push-action@v4
@@ -83,7 +114,21 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
-          
+  
+  build-image-php:
+    needs: check-image
+    if: ${{ needs.check-image.outputs.build-image-php == 'true' }}
+    runs-on: self-hosted
+    steps: 
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2       
       -
         name: Build and push php-fpm
         uses: docker/build-push-action@v4
@@ -114,6 +159,7 @@ jobs:
          # target: /root
        
   deploy:
+    needs: [build-image-apache2, build-image-memcached, build-image-php]
     runs-on: self-hosted
     steps:
      # -
