@@ -9,17 +9,13 @@ env:
   APACHE_IMAGE_NAME: "hutinskit/apache2"
   APACHE_IMAGE_TAG: "v1.0.30"
   MEMCACHED_IMAGE_NAME: "hutinskit/memcached"
-  MEMCACHED_IMAGE_TAG: "v1.0.37"
+  MEMCACHED_IMAGE_TAG: "v1.0.38"
   PHP_IMAGE_NAME: "hutinskit/phpfpm"
   PHP_IMAGE_TAG: "v1.0.30"
 
 jobs:
   check-image:
     runs-on: self-hosted
-    outputs:
-      apache2_output: ${{ steps.apache2-step.outputs.apache2_output }}
-      memcached_output: ${{ steps.memcached-step.outputs.memcached_output }}
-      php_output: ${{ steps.memcached-step.outputs.php_output }}
     steps:
       -
         name: Checkout
@@ -72,6 +68,11 @@ jobs:
              echo "php_output=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
+    
+    outputs:
+      apache2_output: ${{ steps.apache2-step.outputs.apache2_output }}
+      memcached_output: ${{ steps.memcached-step.outputs.memcached_output }}
+      php_output: ${{ steps.memcached-step.outputs.php_output }}
   
   display-image-memacached:
     needs: check-image
