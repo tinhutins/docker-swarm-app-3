@@ -69,10 +69,15 @@ jobs:
             echo "BUILD-IMAGE-PHP=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
-    
+  
+  display-image-memacached:
+    runs-on: self-hosted
+    steps:
+      - run: echo ${{needs.check-image.outputs.BUILD-IMAGE-MEMCACHED}}
+
   build-image-apache2:
     needs: check-image
-    if: ${{ needs.check-image.outputs.apache2-step.BUILD-IMAGE-APACHE2 == 'true' }}
+    if: ${{ needs.check-image.outputs.BUILD-IMAGE-APACHE2 == 'true' }}
     runs-on: self-hosted
     steps:
       # -
