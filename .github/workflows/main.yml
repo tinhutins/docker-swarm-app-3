@@ -74,7 +74,7 @@ jobs:
     needs: check-image
     runs-on: self-hosted
     steps:
-      - run: echo ${{ needs.check-image.outputs.memcached-step.BUILD-IMAGE-MEMCACHED }}
+      - run: echo ${{ needs.check-image.steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED }}
 
   build-image-apache2:
     needs: check-image
