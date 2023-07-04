@@ -16,6 +16,8 @@ env:
 jobs:
   check-image:
     runs-on: self-hosted
+    outputs:
+      memcached_output: ${{ steps.memcached-step.outputs.memcached_output }}
     steps:
       -
         name: Checkout
@@ -50,13 +52,12 @@ jobs:
           if docker pull $MEMCACHED_IMAGE_NAME:$MEMCACHED_IMAGE_TAG; then
             echo "Memcached image already exists, skipping new build and push"
           else
-            echo "testing"
-            echo "BUILD-IMAGE-APACHE2=true" >> "$GITHUB_ENV"
+            echo "memcached_output=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
       
-      - name: Display
-        run: echo "${{ steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED }}"
+#       - name: Display
+#         run: echo "${{ steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED }}"
 
       - name: Check Docker Image for phpfpm and push it if doesn't exists
         id: php-step
@@ -74,7 +75,7 @@ jobs:
     needs: check-image
     runs-on: self-hosted
     steps:
-      - run: echo ${{ needs.check-image.steps.memcached-step.outputs.BUILD-IMAGE-MEMCACHED }}
+      - run: echo ${{ needs.check-image.outputs.memcached_output }}
 
   build-image-apache2:
     needs: check-image
