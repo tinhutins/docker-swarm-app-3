@@ -103,6 +103,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
+    outputs:
+      result: ${{ job.status }}
 
   build-image-memcached:
     needs: check-image
@@ -127,6 +129,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
+    outputs:
+      result: ${{ job.status }}
   
   build-image-php:
     needs: check-image
@@ -151,6 +155,8 @@ jobs:
           push: true
           #tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
+    outputs:
+      result: ${{ job.status }}
       
      # - 
      #   name: create env file
@@ -176,7 +182,7 @@ jobs:
       - build-image-apache2
       - build-image-memcached
       - build-image-php
-    if: ${{ needs.build-image-apache2.result == 'success' || needs.build-image-memcached.result == 'success' || needs.build-image-php.result == 'success' }}
+    if: ${{ needs.build-image-apache2.outputs.result == 'success' || needs.build-image-memcached.outputs.result == 'success' || needs.build-image-php.outputs.result == 'success' }}
     runs-on: self-hosted
     steps:
      # -
