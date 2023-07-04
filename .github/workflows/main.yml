@@ -20,7 +20,6 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -38,7 +37,7 @@ jobs:
           if docker pull $APACHE_IMAGE_NAME:APACHE_IMAGE_TAG; then
             echo "Apache2 image already exists, skipping new build and push"
           else
-            echo "BUILD-IMAGE-APACHE2=true" >> $GITHUB_ENV
+            echo "BUILD-IMAGE-APACHE2=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
       
@@ -49,7 +48,7 @@ jobs:
           if docker pull $MEMCACHED_IMAGE_NAME:$MEMCACHED_IMAGE_TAG; then
             echo "Memcached image already exists, skipping new build and push"
           else
-            echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_ENV
+            echo "BUILD-IMAGE-MEMCACHED=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
 
@@ -60,7 +59,7 @@ jobs:
           if docker pull $PHP_IMAGE_NAME:$OHO_IMAGE_TAG; then
             echo "Phpfpm image already exists, skipping new build and push"
           else
-            echo "BUILD-IMAGE-PHP=true" >> $GITHUB_ENV
+            echo "BUILD-IMAGE-PHP=true" >> $GITHUB_OUTPUT
             # Perform additional steps if the image does not exist
           fi
     
