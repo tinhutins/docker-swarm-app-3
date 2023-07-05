@@ -15,7 +15,7 @@ env:
 
 jobs:
   check-image:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
@@ -78,7 +78,7 @@ jobs:
   build-image-apache2:
     needs: check-image
     if: ${{ needs.check-image.outputs.apache2_output == 'true' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     steps:
       # -
       #   name: Checkout
@@ -107,7 +107,7 @@ jobs:
   build-image-memcached:
     needs: check-image
     if: ${{ needs.check-image.outputs.memcached_output == 'true' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Login to Docker Hub
@@ -133,7 +133,7 @@ jobs:
   build-image-php:
     needs: check-image
     if: ${{ needs.check-image.outputs.php_output == 'true' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     steps: 
       -
         name: Login to Docker Hub
