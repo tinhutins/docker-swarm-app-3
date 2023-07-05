@@ -201,18 +201,19 @@ jobs:
         name: deploy to docker swarm third app - marker 
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: 192.168.43.128
+          host: 10.100.0.44
           username: root
           key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           port: 22
           script: |     
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
-            rsync -av docker-swarm-app-3/ marker_persistent_data/
+            rsync -av docker-swarm-app-3/apache2/etc/ /var/containers/sites/test/apache/ro/
+            rsync -av docker-swarm-app-3/test_site_intercom/ /var/containers/sites/test/apache/rw/test_site_intercom/
             cd docker-swarm-app-3/
             export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
             export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
             export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-            docker-compose config | docker stack deploy -c docker-compose.yml my-swarm-app-3-marker
+            docker-compose config | docker stack deploy -c docker-compose.yml markerstage-testsite
             cd ../ && rm -rf ~/docker-swarm-app-3/
   
       #-  
