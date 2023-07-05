@@ -24,9 +24,9 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.portainer-http.rule=Host(`markerstage-testsite.cratis.cc`)
         - traefik.http.routers.portainer-http.entrypoints=http
-        - traefik.http.routers.portainer-http.middlewares=https-redirect
-        - traefik.http.routers.portainer-https.rule=Host(`markerstage-testsite.cratis.cc`)
-        - traefik.http.routers.portainer-https.entrypoints=https
+        #- traefik.http.routers.portainer-http.middlewares=https-redirect
+        #- traefik.http.routers.portainer-https.rule=Host(`markerstage-testsite.cratis.cc`)
+        #- traefik.http.routers.portainer-https.entrypoints=https
         - traefik.http.routers.portainer-https.tls=true
         - traefik.http.services.portainer.loadbalancer.server.port=80
   phpfpm:
