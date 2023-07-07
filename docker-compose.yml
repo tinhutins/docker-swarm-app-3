@@ -1,16 +1,15 @@
 version: '3.9'
+
 services:
   apache:
-    image: "${APACHE_DOCKER_IMAGE_TAG}"
-    container_name: apache
+    image: "httpd:latest"
     volumes:
-      - /var/containers/sites/test/apache/ro/apache2.conf:/etc/apache2/apache2.conf
-      - /var/containers/sites/test/apache/ro/ports.conf:/etc/apache2/ports.conf
-      - /var/containers/sites/test/apache/ro/mods-enabled/mpm_event.conf:/etc/apache2/mods-enabled/mpm_event.conf
-      - /var/containers/sites/test/apache/ro/sites-enabled:/etc/apache2/sites-enabled/intercom_markerdev_info.conf
-      - /var/containers/sites/test/apache/rw/test_site_intercom/:/var/www/vhosts/intercom_markerdev_info/
+      - /var/containers/sites/test/apache/rw/html:/var/www/html
+      - /var/containers/sites/test/apache/ro/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - /var/containers/sites/test/apache/ro/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+      - /var/containers/sites/test/apache/ro/httpd-mpm.conf:/usr/local/apache2/conf/extra/httpd-mpm.conf
     networks:
-      - php_network
+      - testsite_internal
       - traefik-public
     deploy:
       mode: replicated
@@ -18,39 +17,36 @@ services:
       placement:
         constraints:
           - node.role == worker
-    labels:
+      labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.portainer-http.rule=Host(`markerstage-testsite.cratis.cc`)
-        - traefik.http.routers.portainer-http.entrypoints=http
-        #- traefik.http.routers.portainer-http.middlewares=https-redirect
-        #- traefik.http.routers.portainer-https.rule=Host(`markerstage-testsite.cratis.cc`)
-        #- traefik.http.routers.portainer-https.entrypoints=https
-        - traefik.http.routers.portainer-https.tls=true
-        - traefik.http.services.portainer.loadbalancer.server.port=80
+        - traefik.http.routers.apache-http.rule=Host(`markerstage-testsite.cratis.cc`)
+        - traefik.http.routers.apache-http.entrypoints=http
+        - traefik.http.routers.apache-http.middlewares=https-redirect
+        - traefik.http.routers.apache-https.rule=Host(`markerstage-testsite.cratis.cc`)
+        - traefik.http.routers.apache-https.entrypoints=https
+        - traefik.http.routers.apache-https.tls=true
+        - traefik.http.services.apache.loadbalancer.server.port=80
+
   phpfpm:
-    container_name: phpfpm
-    #image: "${PHP_DOCKER_IMAGE_TAG}"
-    image: "php:8.2.7-fpm-alpine"
-        # - '9002:9002'
-    #volumes:
-      #- ../php_fpm_82/intercom.conf:/usr/local/etc/php-fpm.d/intercom.conf
-      #- ~/marker_persistent_data/test_site_intercom:/var/www/vhosts/intercom_markerdev_info
-      #- /root/marker_app_stack/php_fpm_82/zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+    image: "hutinskit/phpfpm:v1.0.30"
+    volumes:
+      -  /var/containers/sites/test/apache/rw/html:/var/www/html
+      -  /var/containers/sites/test/php/ro/www.conf:/usr/local/etc/php-fpm.d/www.conf
     networks:
-      - php_network
+      - testsite_internal
     deploy:
       mode: replicated
       replicas: 3
       placement:
         constraints:
           - node.role == worker
+
   memcached:
-    container_name: memcached
-    image: "${MEMCACHED_DOCKER_IMAGE_TAG}"
+    image: "memcached:latest"
     networks:
-      - php_network
+      - testsite_internal
     deploy:
       mode: replicated
       replicas: 3
@@ -59,7 +55,7 @@ services:
           - node.role == worker
 
 networks:
-  php_network:
+  testsite_internal:
     driver: overlay
     attachable: true
   traefik-public:

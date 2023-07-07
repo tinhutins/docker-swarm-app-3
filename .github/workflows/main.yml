@@ -209,12 +209,13 @@ jobs:
           script: |     
             git clone https://github.com/tinhutins/docker-swarm-app-3.git
             rsync -av docker-swarm-app-3/apache2/etc/ /var/containers/sites/test/apache/ro/
-            rsync -av docker-swarm-app-3/test_site_intercom/ /var/containers/sites/test/apache/rw/test_site_intercom/
+            rsync -av docker-swarm-app-3/test_site_intercom/ /var/containers/sites/test/apache/rw/html
+            rsync -av docker-swarm-app-3/php_fpm_82/ /var/containers/sites/test/php/ro/
             cd docker-swarm-app-3/
             export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
             export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
             export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-            docker-compose config | docker stack deploy -c docker-compose.yml markerstage-testsite
+            docker-compose config | docker stack deploy -c docker-compose.yml marker
             cd ../ && rm -rf ~/docker-swarm-app-3/
   
       #-  
