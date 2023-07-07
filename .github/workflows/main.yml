@@ -208,22 +208,19 @@ jobs:
           port: 22
           script: | 
             export directory="/var/containers/sites/test"
+            export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
+            export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
+            export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
             if [ -d $directory ]; then   
               cd /var/containers/sites/test/ && git pull 
-              export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
-              export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
-              export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-              docker-compose config | docker stack deploy -c docker-compose.yml marker
+              docker compose config | docker stack deploy -c docker-compose.yml marker
             else
               cd /var/containers/sites/
               git clone https://github.com/tinhutins/test.git
               cd test/
-              export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
-              export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
-              export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-              docker-compose config | docker stack deploy -c docker-compose.yml marker
+              docker compose config | docker stack deploy -c docker-compose.yml marker
             fi 
-            
+
       #-  
       # name: Deploy to Docker swarm
       # uses: wshihadeh/docker-deployment-action@v1
