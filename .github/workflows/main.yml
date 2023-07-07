@@ -223,6 +223,7 @@ jobs:
               export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
               docker-compose config | docker stack deploy -c docker-compose.yml marker
             fi 
+            
       #-  
       # name: Deploy to Docker swarm
       # uses: wshihadeh/docker-deployment-action@v1
