@@ -206,18 +206,23 @@ jobs:
           username: root
           key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           port: 22
-          script: |     
-            git clone https://github.com/tinhutins/docker-swarm-app-3.git
-            rsync -av docker-swarm-app-3/apache2/etc/ /var/containers/sites/test/apache/ro/
-            rsync -av docker-swarm-app-3/test_site_intercom/ /var/containers/sites/test/apache/rw/html
-            rsync -av docker-swarm-app-3/php_fpm_82/ /var/containers/sites/test/php/ro/
-            cd docker-swarm-app-3/
-            export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
-            export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
-            export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
-            docker-compose config | docker stack deploy -c docker-compose.yml marker
-            cd ../ && rm -rf ~/docker-swarm-app-3/
-  
+          script: | 
+            export directory="/var/containers/sites/test"
+            if [ -d $directory ]; then   
+              cd /var/containers/sites/test/ && git pull 
+              export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
+              export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
+              export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
+              docker-compose config | docker stack deploy -c docker-compose.yml marker
+            else
+              cd /var/containers/sites/
+              git clone https://github.com/tinhutins/test.git
+              cd test/
+              export APACHE_DOCKER_IMAGE_TAG=${{ env.APACHE_IMAGE_NAME }}:${{ env.APACHE_IMAGE_TAG }}
+              export MEMCACHED_DOCKER_IMAGE_TAG=${{ env.MEMCACHED_IMAGE_NAME }}:${{ env.MEMCACHED_IMAGE_TAG }}
+              export PHP_DOCKER_IMAGE_TAG=${{ env.PHP_IMAGE_NAME }}:${{ env.PHP_IMAGE_TAG }}
+              docker-compose config | docker stack deploy -c docker-compose.yml marker
+            fi 
       #-  
       # name: Deploy to Docker swarm
       # uses: wshihadeh/docker-deployment-action@v1
