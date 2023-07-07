@@ -197,7 +197,7 @@ jobs:
          # key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
          # port: 22
          # script: set -a && . .env && set +a
-          
+
       -
         name: deploy to docker swarm third app - marker 
         uses: appleboy/ssh-action@v0.1.10
